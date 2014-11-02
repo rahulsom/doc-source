@@ -1,0 +1,8 @@
+# Gradle stuff
+.gradle
+.gradletasknamecache
+build
+
+# IDEA Stuff
+.idea
+*.iml
