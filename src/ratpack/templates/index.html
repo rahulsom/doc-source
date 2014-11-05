@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="icon" href="../../favicon.ico">
+
+	<title>DocSource</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+	<!--[if lt IE 9]>
+	<script src="http://getbootstrap.com/assets/js/ie8-responsive-file-warning.js"></script>
+	<![endif]-->
+	<script src="http://getbootstrap.com/assets/js/ie-emulation-modes-warning.js"></script>
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<style>
+		body {
+			min-height: 2000px;
+		}
+
+		#navtop {
+			padding-top: 20px;
+			width: 100%;
+			position: fixed;
+		}
+
+		.navsection {
+			padding-top: 80px;
+		}
+
+	</style>
+</head>
+
+<body data-spy="scroll" data-target=".navbar-default" data-offset="0">
+<div id="navtop">
+	<div class="container">
+		<!-- Static navbar -->
+		<nav class="navbar navbar-default navbar-static" role="navigation">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+						aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">Doc Source</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#intro">Home</a></li>
+					<li><a href="#demographics">Demographics</a></li>
+					<li><a href="#data">Data</a></li>
+					<li><a href="#metadata">Metadata</a></li>
+					<li><a href="#configuration">Configuration</a></li>
+				</ul>
+
+			</div>
+			<!--/.nav-collapse -->
+		</nav>
+	</div>
+</div>
+<div class="container">
+	<form role="form">
+		<div class="navsection" id="intro">
+
+			<!-- Main component for a primary marketing message or call to action -->
+			<div class="jumbotron">
+				<h1>Doc Source</h1>
+
+				<p>This example is a quick exercise to illustrate how the default, static navbar and fixed to top navbar
+					work.
+					It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
+
+				<p>
+					<a class="btn btn-lg btn-primary" href="#demographics" role="button">Get Started &raquo;</a>
+				</p>
+			</div>
+		</div>
+
+		<div id="demographics" class="navsection">
+			<h1>Demographics<a href="#" class="pull-right" id="random-demographics">
+				<span class="glyphicon glyphicon-random"></span>&nbsp;</a>
+			</h1>
+			<hr/>
+
+			<div class="row">
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="firstName">First Name</label>
+								<input type="text" class="form-control" id="firstName" placeholder="John">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="lastName">Last Name</label>
+								<input type="text" class="form-control" id="lastName" placeholder="Smith">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="gender">Gender</label>
+								<select class="form-control" name="gender" id="gender">
+									<option>M</option>
+									<option>F</option>
+									<option>UN</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="dob">Date Of Birth</label>
+								<input type="date" class="form-control" id="dob">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="race">Race</label>
+								<input type="text" class="form-control" id="race"
+									   placeholder="White,Black,Hispanic,AsianOrPacificIslander">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="street">Street</label>
+						<input type="text" class="form-control" id="street" placeholder="910 Hamilton Ave #500">
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="city">City</label>
+								<input type="text" class="form-control" id="city" placeholder="Rancho Cucamonga">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="state">State</label>
+								<input type="text" class="form-control" id="state" placeholder="California">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="zip">Zip Code</label>
+								<input type="text" class="form-control" id="zip"
+									   placeholder="92121">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="country">Country</label>
+								<input type="text" class="form-control" id="country"
+									   placeholder="United States of America">
+							</div>
+						</div>
+
+					</div>
+					<a class="btn btn-default" href="#data">Next</a>
+				</div>
+				<div class="col-md-4">
+					<video autoplay class="col-md-12"></video>
+					<img src="" class="col-md-12" id="photo" style="display: none;">
+					<canvas style="display:none;"></canvas>
+				</div>
+			</div>
+
+		</div>
+		<div id="data" class="navsection">
+			<h1>Data</h1>
+			<hr/>
+		</div>
+		<div id="metadata" class="navsection">
+			<h1>Metadata</h1>
+			<hr/>
+		</div>
+		<div id="configuration" class="navsection">
+			<h1>Configuration</h1>
+			<hr/>
+		</div>
+	</form>
+
+</div>
+<!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.3/moment.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
