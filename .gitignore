@@ -6,3 +6,4 @@ build
 # IDEA Stuff
 .idea
 *.iml
+*.ipr
