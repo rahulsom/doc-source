@@ -1,0 +1,96 @@
+<h1>Demographics<a href="javascript:void(0)" class="pull-right" id="random-demographics">
+	<span class="glyphicon glyphicon-random"></span>&nbsp;</a>
+</h1>
+<hr/>
+
+<div class="row">
+	<form role="form">
+		<div class="col-md-8">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="firstName">First Name</label>
+						<input type="text" class="form-control" id="firstName" placeholder="John"
+							   ng-model="request.patient.firstName">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="lastName">Last Name</label>
+						<input type="text" class="form-control" id="lastName" placeholder="Smith"
+							   ng-model="request.patient.lastName">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					<div class="form-group">
+						<label for="gender">Gender</label>
+						<select class="form-control" name="gender" id="gender" ng-model="request.patient.gender">
+							<option>M</option>
+							<option>F</option>
+							<option>UN</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label for="dob">Date Of Birth</label>
+						<input type="date" class="form-control" id="dob" ng-model="request.patient.dob">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="race">Race</label>
+						<input type="text" class="form-control" id="race"
+							   placeholder="White,Black,Hispanic,AsianOrPacificIslander" ng-model="request.patient.race">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="street">Street</label>
+				<input type="text" class="form-control" id="street" placeholder="910 Hamilton Ave #500"
+					   ng-model="request.patient.address.street">
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label for="city">City</label>
+						<input type="text" class="form-control" id="city" placeholder="Rancho Cucamonga"
+							   ng-model="request.patient.address.city">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label for="state">State</label>
+						<input type="text" class="form-control" id="state" placeholder="California"
+							   ng-model="request.patient.address.state">
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="form-group">
+						<label for="zip">Zip Code</label>
+						<input type="text" class="form-control" id="zip"
+							   placeholder="92121" ng-model="request.patient.address.zipCode">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="country">Country</label>
+						<input type="text" class="form-control" id="country"
+							   placeholder="United States of America" ng-model="request.patient.address.country">
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="col-md-4">
+			<video autoplay class="col-md-12"></video>
+			<img src="" class="col-md-12" id="photo" style="display: none;">
+			<canvas style="display:none;"></canvas>
+		</div>
+	</form>
+
+</div>

@@ -1,7 +1,7 @@
 package com.github.rahulsom.docsource.cda
 
 import com.github.rahulsom.cda.*
-import com.github.rahulsom.docsource.Person
+import com.github.rahulsom.docsource.Request
 
 import static com.github.rahulsom.docsource.cda.CdaHelper.*
 
@@ -10,7 +10,8 @@ import static com.github.rahulsom.docsource.cda.CdaHelper.*
  */
 class CdaBuilder {
 
-  String ISO8601Format = "yyyy-MM-dd'T'HH:mm:ssZ"
+  String TimestampFormat = "yyyyMMddHHmmss"
+  def    currentTime     = new Date()
 
   POCDMT000040ClinicalDocument addHeader(POCDMT000040ClinicalDocument clinicalDocument) {
     clinicalDocument.
@@ -32,7 +33,7 @@ class CdaBuilder {
             withCodeSystem('2.16.840.1.113883.6.1').withCodeSystemName('LOINC')
         ).
         withTitle(new ST().withContent('Continuity of Care Document')).
-        withEffectiveTime(new TS().withValue(new Date().format(ISO8601Format))).
+        withEffectiveTime(new TS().withValue(currentTime.format(TimestampFormat))).
         withConfidentialityCode(new CE().
             withCode('N').
             withDisplayName('Normal').
@@ -41,66 +42,64 @@ class CdaBuilder {
         withLanguageCode(new CS().withCode('en-US'))
   }
 
-  POCDMT000040ClinicalDocument buildCda(Person person) {
+  POCDMT000040ClinicalDocument buildCda(Request request) {
 
     new POCDMT000040ClinicalDocument().
         with { addHeader(it) }.
-        withRecordTarget(buildRecordTarget(person)).
-        withAuthor(buildAuthor(person)).
+        withRecordTarget(buildRecordTarget(request)).
+        withAuthor(buildAuthor(request)).
         withComponent(new POCDMT000040Component2().
             withStructuredBody(
                 new POCDMT000040StructuredBody().
                     withComponent(
-                        buildVitalSigns(person.vitalSigns), /* TODO More Sections*/
+                        buildVitalSigns(request.vitalSigns), /* TODO More Sections*/
                     )
             )
         )
   }
 
-  private POCDMT000040Author buildAuthor(Person person) {
+  private POCDMT000040Author buildAuthor(Request request) {
     new POCDMT000040Author().
         withTypeCode('AUT').
         withContextControlCode('OP').
-        withTime(ts(new Date().format(ISO8601Format))).
+        withTime(ts(currentTime.format(TimestampFormat))).
         withAssignedAuthor(
             new POCDMT000040AssignedAuthor().
-                withId(ii(person.identifier.root)).
+                withId(ii(request.identifier.root)).
                 withRepresentedOrganization(new POCDMT000040Organization().
-                    withId(ii(person.identifier.root)).
-                    withName(new ON().withContent(person.identifier.name))
+                    withId(ii(request.identifier.root)).
+                    withName(new ON().withContent(request.identifier.name))
                 )
 
         )
   }
 
-  private POCDMT000040RecordTarget buildRecordTarget(Person person) {
-    def dob = person.dob.format('yyyy-MM-dd')
+  private POCDMT000040RecordTarget buildRecordTarget(Request request) {
+    def dob = request.patient.dob.format('yyyyMMdd')
     new POCDMT000040RecordTarget().withPatientRole(
         new POCDMT000040PatientRole().
             withId(
-                new II().
-                    withRoot(person.identifier.root).
-                    withExtension(person.identifier.extension)
+                ii(request.identifier.root, request.identifier.extension)
             ).
             withPatient(
                 new POCDMT000040Patient().
-                    withName(En.from(person.firstName, person.lastName)).
-                    withAdministrativeGenderCode(new CE().withCode(person.gender)).
+                    withName(En.from(request.patient.firstName, request.patient.lastName)).
+                    withAdministrativeGenderCode(new CE().withCode(request.patient.gender)).
                     withBirthTime(ts(dob))
             ).
             withAddr(
                 Ad.from(
-                    person.address.street,
-                    person.address.city,
-                    person.address.state,
-                    person.address.country,
-                    person.address.zipCode,
+                    request.patient.address.street,
+                    request.patient.address.city,
+                    request.patient.address.state,
+                    request.patient.address.country,
+                    request.patient.address.zipCode,
                 )
             )
     )
   }
 
-  private POCDMT000040Component3 buildVitalSigns(List<Person.VitalSign> vitalSigns) {
+  private POCDMT000040Component3 buildVitalSigns(List<Request.VitalSign> vitalSigns) {
     def je = new StrucDocTable().
         withThead(new StrucDocThead().
             withTr(new StrucDocTr().
@@ -118,7 +117,7 @@ class CdaBuilder {
                   new StrucDocTr().
                       withThOrTd(
                           new StrucDocTd().withContent(vs.text),
-                          new StrucDocTd().withContent(new Date().format('yyyy-MM-dd')),
+                          new StrucDocTd().withContent(currentTime.format('yyyy-MM-dd')),
                           new StrucDocTd().withContent(vs.value),
                           new StrucDocTd().withContent(vs.unit),
                       )
@@ -143,7 +142,7 @@ class CdaBuilder {
                         withCode(cd('46680005', '2.16.840.1.113883.6.96')).
                         withStatusCode(cs('completed')).
                         withEffectiveTime(
-                            new IVLTS().withValue(new Date().format(ISO8601Format))
+                            new IVLTS().withValue(currentTime.format(TimestampFormat))
                         ).
                         withComponent(vitalSigns.collect { vs -> buildVitalSign(vs) })
 
@@ -154,7 +153,7 @@ class CdaBuilder {
   }
 
 
-  private POCDMT000040Component4 buildVitalSign(Person.VitalSign vs) {
+  private POCDMT000040Component4 buildVitalSign(Request.VitalSign vs) {
     new POCDMT000040Component4().
         withObservation(new POCDMT000040Observation().
             withClassCode('OBS').
@@ -166,7 +165,7 @@ class CdaBuilder {
             ).
             withStatusCode(cs('completed')).
             withEffectiveTime(new IVLTS().
-                withValue(new Date().format(ISO8601Format))
+                withValue(currentTime.format(TimestampFormat))
             ).
             withValue(new PQ().
                 withValue(vs.value).
