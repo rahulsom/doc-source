@@ -65,11 +65,12 @@
   <div class="col-md-5">
     <code>{{medication.productNdc}}</code> <strong>{{medication.proprietaryName}}</strong><br/>
       {{medication.nonProprietaryName}}<br/>
-      {{medication.dosageFormName}} - {{medication.activeNumeratorStrength}}
+      {{medication.dosageFormName}}<br/>
+      {{medication.activeIngredients}}
   </div>
   <div class="col-md-6">
-    <select ng-model="medication.package"
-            ng-options="package.packageDescription for package in medication._embedded.packages track by package.ndcPackageCode"
+    <select ng-model="medication.package1"
+            ng-options="package.packageDescription for package in medication.packages track by package.ndcPackageCode"
             ng-required="true"></select> <br/>
     <input type="text" ng-model="medication.refills" placeholder="Refills" class="col-md-2"/>
     <input type="text" ng-model="medication.instructions" placeholder="Instructions"/>

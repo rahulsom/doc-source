@@ -78,8 +78,17 @@ class Request {
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   static class Medication {
-    String text
+    String proprietaryName
+    String nonProprietaryName
+    String activeIngredients
     String code
+    String instructions
+
+    static class Package1 {
+      String ndcPackageCode
+      String packageDescription
+    }
+    Package1 package1 = new Package1()
   }
   List<Medication> medications
 

@@ -78,6 +78,15 @@ class CdaHelper {
 		return new CE().withCode(code);
 	}
 
+	public static CE ce(String code, String codeSystem, String displayName, String codeSystemName) {
+		return new CE().
+				withCode(code).
+				withCodeSystem(codeSystem).
+				withDisplayName(displayName).
+				withCodeSystemName(codeSystemName)
+
+	}
+
 	public static PN pn(Collection<JAXBElement<? extends ENXP>> data) {
 		List arg = new ArrayList();
 		arg.addAll(data);

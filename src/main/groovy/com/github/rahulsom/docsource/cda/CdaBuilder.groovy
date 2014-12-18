@@ -3,6 +3,7 @@ package com.github.rahulsom.docsource.cda
 import com.github.rahulsom.cda.*
 import com.github.rahulsom.docsource.Request
 import com.github.rahulsom.docsource.util.Pair
+import groovy.time.TimeCategory
 
 import static com.github.rahulsom.docsource.cda.CdaHelper.*
 
@@ -55,6 +56,7 @@ class CdaBuilder {
                     withComponent(
                         buildVitalSigns(request.vitalSigns),
                         buildLabResults(request.labResults),
+                        buildMedications(request.medications, request),
                         /* TODO More Sections*/
                     )
             )
@@ -174,7 +176,6 @@ class CdaBuilder {
                 new StrucDocTd().withContent(vs.unit),
             )
     )
-
   }
 
   private POCDMT000040Component3 buildLabResults(List<Request.LabResult> labResults) {
@@ -250,6 +251,119 @@ class CdaBuilder {
             )
 
     )
-
   }
+
+  private POCDMT000040Component3 buildMedications(List<Request.Medication> medications, Request request) {
+
+    def labResultElements = medications.collect { buildMedication(it, request) }
+    def je = new StrucDocTable().
+        withThead(new StrucDocThead().
+            withTr(new StrucDocTr().
+                withThOrTd(
+                    new StrucDocTh().withContent('Medication'),
+                    new StrucDocTh().withContent('Date'),
+                    new StrucDocTh().withContent('Instructions'),
+                    new StrucDocTh().withContent('Prescriber'),
+                )
+            )
+        ).
+        withTbody(new StrucDocTbody().
+            withTr(labResultElements*.right)
+        )
+
+    new POCDMT000040Component3().
+        withSection(
+            new POCDMT000040Section().
+                withTemplateId(ii('2.16.840.1.113883.10.20.1.16')).
+                withCode(new CE().withCode('10160-0').withCodeSystem('2.16.840.1.113883.6.1')).
+                withTitle(st('Medications')).
+                withText(new StrucDocText().withContent(jaxb('table', StrucDocTable, je))).
+                withEntry(labResultElements*.left)
+        )
+  }
+
+
+  private Pair<POCDMT000040Entry, StrucDocTr> buildMedication(Request.Medication medication, Request request) {
+      def medicationHighTime = use(TimeCategory) {
+          currentTime + calcMedicationDays(medication).days
+      }
+
+      def displayName = medication.activeIngredients
+
+      def textName = [medication.proprietaryName]
+      textName.addAll(medication.activeIngredients.split(';'))
+      new Pair(
+        new POCDMT000040Entry().
+            withSubstanceAdministration(new POCDMT000040SubstanceAdministration().
+                withId(ii('MHDT')).
+                withText(new ED().withContent(medication.instructions)).
+                withEffectiveTime(new SXCMTS().withValue(
+                    currentTime.format(TimestampFormat))).
+                withConsumable(new POCDMT000040Consumable().
+                    withManufacturedProduct(new POCDMT000040ManufacturedProduct().
+                        withManufacturedMaterial(new POCDMT000040Material().
+                            withCode(ce(medication.package1.ndcPackageCode, '2.16.840.1.113883.12.549', displayName, 'NDC'))
+                        )
+                    )
+                ).
+                withPerformer(new POCDMT000040Performer2().
+                    withTypeCode(ParticipationPhysicalPerformer.PRF).
+                    withAssignedEntity(new POCDMT000040AssignedEntity().
+                        withAssignedPerson(new POCDMT000040Person().
+                            withName(new PN().withContent(request.author.name))
+                        ).
+                        withRepresentedOrganization(new POCDMT000040Organization().
+                            withName(new ON().withContent(request.author.institution))
+                        )
+                    )
+                ).
+                withEntryRelationship(
+                    new POCDMT000040EntryRelationship().
+                        withObservation(new POCDMT000040Observation().
+                            withId(ii('MDHT')).
+                            withEffectiveTime(new IVLTS().
+                                withRest(
+                                    jaxb('low', TS, new TS().withValue(currentTime.format('yyyy-MM-dd'))),
+                                    jaxb('high', TS, new TS().withValue(medicationHighTime.format('yyyy-MM-dd')))
+                                )
+                            )
+                        )
+                )
+            ),
+        new StrucDocTr().
+            withThOrTd(
+                new StrucDocTd().withContent(
+                    textName.collect {
+                        [it, jaxb('br', StrucDocBr, new StrucDocBr())]
+                    }.flatten()
+                ),
+                new StrucDocTd().withContent(
+                    "${currentTime.format('yyyy-MM-dd')} - ${medicationHighTime.format('yyyy-MM-dd')}".toString()
+                ),
+                new StrucDocTd().withContent(medication.instructions),
+                new StrucDocTd().withContent(
+                    request.author.name,
+                    jaxb('br', StrucDocBr, new StrucDocBr()),
+                    request.author.specialty,
+                    jaxb('br', StrucDocBr, new StrucDocBr()),
+                    request.author.role,
+                    jaxb('br', StrucDocBr, new StrucDocBr()),
+                    request.author.institution,
+                    jaxb('br', StrucDocBr, new StrucDocBr()),
+                ),
+            )
+
+    )
+  }
+
+    private int calcMedicationDays(medication) {
+        try {
+            def perDay = Integer.parseInt((medication.instructions =~ /(\d+).*/)[0][1])
+            def packageSize = Integer.parseInt((medication.package1.packageDescription =~ /(\d+).*/)[0][1])
+            packageSize / perDay
+        } catch (Exception ignore) {
+            30
+        }
+    }
+
 }
