@@ -1,5 +1,6 @@
 var vitalSignsSource = createLoincDataSource('vital-signs', '/vital');
 var labResultsSource = createLoincDataSource('lab-results', '/lab');
+var medicationsSource = createNdcDataSource('medications', '/medication');
 
 angular.module('docSourceApp', []).controller('DocSourceController', ['$scope', function ($scope) {
 	$scope.request = {
@@ -84,7 +85,7 @@ angular.module('docSourceApp', []).controller('DocSourceController', ['$scope', 
 			});
 
 	/*
-	 * Typeahead for vital signs
+	 * Typeahead for lab results
 	 */
 	$('#newLabResult')
 			.typeahead(globalTypeAheadOptions, labResultsSource)
@@ -96,6 +97,17 @@ angular.module('docSourceApp', []).controller('DocSourceController', ['$scope', 
 						units: loinc.units,
 						unit: loinc.unit
 					});
+				});
+			});
+
+	/*
+	 * Typeahead for medications
+	 */
+	$('#newMedication')
+			.typeahead(globalTypeAheadOptions, medicationsSource)
+			.on('typeahead:selected', function (event, ndcProduct, dataset) {
+				$scope.$apply(function () {
+					$scope.request.medications.push(ndcProduct);
 				});
 			});
 

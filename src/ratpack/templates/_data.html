@@ -1,5 +1,8 @@
 <h1>Data</h1>
 <hr/>
+<!--
+     Vital Signs
+-->
 <div ng-repeat="vitalSign in request.vitalSigns" class="row">
   <div class="col-md-1">
     <code>{{vitalSign.code}}</code>
@@ -24,6 +27,10 @@
     <input type="text" ng-model="todoText" size="30" id="newVitalSign" placeholder="Search for vital signs">
   </div>
 </div>
+<div class="row"><div class="col-md-12">&nbsp;</div></div>
+<!--
+     Lab Results
+-->
 
 <div ng-repeat="labResult in request.labResults" class="row">
   <div class="col-md-1">
@@ -49,3 +56,33 @@
     <input type="text" ng-model="todoText" size="30" id="newLabResult" placeholder="Search for lab results">
   </div>
 </div>
+<div class="row"><div class="col-md-12">&nbsp;</div></div>
+<!--
+     Medications
+-->
+
+<div ng-repeat="medication in request.medications" class="row">
+  <div class="col-md-5">
+    <code>{{medication.productNdc}}</code> <strong>{{medication.proprietaryName}}</strong><br/>
+      {{medication.nonProprietaryName}}<br/>
+      {{medication.dosageFormName}} - {{medication.activeNumeratorStrength}}
+  </div>
+  <div class="col-md-6">
+    <select ng-model="medication.package"
+            ng-options="package.packageDescription for package in medication._embedded.packages track by package.ndcPackageCode"
+            ng-required="true"></select> <br/>
+    <input type="text" ng-model="medication.refills" placeholder="Refills" class="col-md-2"/>
+    <input type="text" ng-model="medication.instructions" placeholder="Instructions"/>
+  </div>
+  <div class="col-md-1 pull-right">
+    <a href="javascript:void(0)" ng-click="deleteMedication(\$index)">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+    </a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <input type="text" ng-model="todoText" size="30" id="newMedication" placeholder="Search for medications">
+  </div>
+</div>
+<div class="row"><div class="col-md-12">&nbsp;</div></div>
