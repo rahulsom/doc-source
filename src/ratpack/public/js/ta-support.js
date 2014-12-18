@@ -5,6 +5,9 @@ var globalTypeAheadOptions = {
 
 function createLoincDataSource(name, url) {
 	var LoincFromHal = function (resp) {
+		if (!resp._embedded) {
+			return [];
+		}
 		_.each(resp._embedded.loinc, function (loinc) {
 			var parts = loinc._links.self.href.split('/');
 			loinc.id = parts[parts.length - 1];

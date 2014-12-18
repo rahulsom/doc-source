@@ -59,11 +59,11 @@ class PnrBuilder {
   ProvideAndRegisterDocumentSetRequestType buildPnr(Request request, byte[] ccdOut){
 
     def photoRegex = 'data:(.*.);(.*),(.*)'
-    def photoMatch = request.patient.photo =~ photoRegex
-
-    String photoFormat = photoMatch[0][1]
-    String photoEncoding = photoMatch[0][2]
-    String photoData = photoMatch[0][3]
+    String photoFormat = null, photoEncoding = null, photoData = null
+    if (request.patient.photo ==~ photoRegex) {
+      def photoMatch = request.patient.photo =~ photoRegex
+      (_, photoFormat, photoEncoding, photoData) = photoMatch[0]
+    }
     def photoBinary = photoEncoding == 'base64' ? photoData.decodeBase64() : ''.bytes
 
     def currentTime = new Date()
@@ -272,9 +272,10 @@ class PnrBuilder {
   }
 
   private ProvideAndRegisterDocumentSetRequestType.Document document(String id, String mimeType, byte[] bytes) {
+    def extension = mimeType ? mimeType.split('/').last() : '.jpeg'
     new ProvideAndRegisterDocumentSetRequestType.Document().
         withId(id).
-        withValue(new DataHandler(new MimeDataSource("${id}.${mimeType.split('/').last()}", mimeType, bytes)))
+        withValue(new DataHandler(new MimeDataSource("${id}.${extension}", mimeType, bytes)))
   }
 
   private AssociationType1 associate(String source, String destination) {

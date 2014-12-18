@@ -42,14 +42,15 @@ class RandomPatientHandler implements Handler {
 		def person = nameDb.person
 		def dob = new Date() - (Math.abs(rand.nextInt()) % (365 * 80))
 		context.blocking { promise ->
+			Address address = null
 			for (int i = 0; i < 3; i++) {
 				def latLng = new LatLng(lat + rand.nextGaussian() / 10, lng + rand.nextGaussian() / 10)
-				def add = new GeonamesCoder('rahulsom').decode(latLng)
-				if (add) {
-					promise.success(add)
+				address = new GeonamesCoder('rahulsom').decode(latLng)
+				if (address) {
 					break
 				}
 			}
+			address
 		}.then { add ->
 			context.render json(patientToMap(person, add, dob))
 		}

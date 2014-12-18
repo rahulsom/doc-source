@@ -1,3 +1,4 @@
+import com.github.rahulsom.docsource.LabResultHandler
 import com.github.rahulsom.docsource.MedicationHandler
 import com.github.rahulsom.docsource.RandomPatientHandler
 import com.github.rahulsom.docsource.SubmissionHandler
@@ -31,6 +32,7 @@ ratpack {
 		get('random-patient', new RandomPatientHandler('910 Hamilton Ave, Campbell, CA 95008'))
 		get('medication', MedicationHandler)
 		get('vital', VitalSignHandler)
+		get('lab', LabResultHandler)
 
 		post('send', SubmissionHandler)
 

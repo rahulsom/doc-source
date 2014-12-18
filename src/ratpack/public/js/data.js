@@ -1,4 +1,5 @@
 var vitalSignsSource = createLoincDataSource('vital-signs', '/vital');
+var labResultsSource = createLoincDataSource('lab-results', '/lab');
 
 angular.module('docSourceApp', []).controller('DocSourceController', ['$scope', function ($scope) {
 	$scope.request = {
@@ -23,6 +24,12 @@ angular.module('docSourceApp', []).controller('DocSourceController', ['$scope', 
 	$scope.deleteVitalSign = function ($index) {
 		if ($index > -1) {
 			$scope.request.vitalSigns.splice($index, 1);
+		}
+	};
+
+	$scope.deleteLabResult = function ($index) {
+		if ($index > -1) {
+			$scope.request.labResults.splice($index, 1);
 		}
 	};
 
@@ -68,6 +75,22 @@ angular.module('docSourceApp', []).controller('DocSourceController', ['$scope', 
 			.on('typeahead:selected', function (event, loinc, dataset) {
 				$scope.$apply(function () {
 					$scope.request.vitalSigns.push({
+						text: loinc.longCommonName,
+						code: loinc.id,
+						units: loinc.units,
+						unit: loinc.unit
+					});
+				});
+			});
+
+	/*
+	 * Typeahead for vital signs
+	 */
+	$('#newLabResult')
+			.typeahead(globalTypeAheadOptions, labResultsSource)
+			.on('typeahead:selected', function (event, loinc, dataset) {
+				$scope.$apply(function () {
+					$scope.request.labResults.push({
 						text: loinc.longCommonName,
 						code: loinc.id,
 						units: loinc.units,
