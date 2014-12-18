@@ -2,6 +2,7 @@ package com.github.rahulsom.docsource.cda
 
 import com.github.rahulsom.cda.*
 import com.github.rahulsom.docsource.Request
+import com.github.rahulsom.docsource.util.Pair
 
 import static com.github.rahulsom.docsource.cda.CdaHelper.*
 
@@ -102,6 +103,7 @@ class CdaBuilder {
   }
 
   private POCDMT000040Component3 buildVitalSigns(List<Request.VitalSign> vitalSigns) {
+    def vitalSignElements = vitalSigns.collect { vs -> buildVitalSign(vs) }
     def je = new StrucDocTable().
         withThead(new StrucDocThead().
             withTr(new StrucDocTr().
@@ -114,17 +116,7 @@ class CdaBuilder {
             )
         ).
         withTbody(new StrucDocTbody().
-            withTr(
-                vitalSigns.collect { vs ->
-                  new StrucDocTr().
-                      withThOrTd(
-                          new StrucDocTd().withContent(vs.text),
-                          new StrucDocTd().withContent(currentTime.format('yyyy-MM-dd HH:mm z')),
-                          new StrucDocTd().withContent(vs.value),
-                          new StrucDocTd().withContent(vs.unit),
-                      )
-                }
-            )
+            withTr(vitalSignElements*.right)
         )
 
     new POCDMT000040Component3().
@@ -146,37 +138,47 @@ class CdaBuilder {
                         withEffectiveTime(
                             new IVLTS().withValue(currentTime.format(TimestampFormat))
                         ).
-                        withComponent(vitalSigns.collect { vs -> buildVitalSign(vs) })
+                        withComponent(vitalSignElements*.left)
 
                     )
                 )
         )
-
   }
 
 
-  private POCDMT000040Component4 buildVitalSign(Request.VitalSign vs) {
-    new POCDMT000040Component4().
-        withObservation(new POCDMT000040Observation().
-            withClassCode('OBS').
-            withMoodCode(XActMoodDocumentObservation.EVN).
-            withTemplateId(ii('2.16.840.1.113883.10.20.1.31')).
-            withId(ii('c6f88322-67ad-11db-bd13-0800200c9a67')).
-            withCode(cd(vs.code, '2.16.840.1.113883.6.1').
-                withDisplayName(vs.text)
-            ).
-            withStatusCode(cs('completed')).
-            withEffectiveTime(new IVLTS().
-                withValue(currentTime.format(TimestampFormat))
-            ).
-            withValue(new PQ().
-                withValue(vs.value).
-                withUnit(vs.unit)
+  private Pair<POCDMT000040Component4, StrucDocTr> buildVitalSign(Request.VitalSign vs) {
+    new Pair<POCDMT000040Component4, StrucDocTr>(
+        new POCDMT000040Component4().
+            withObservation(new POCDMT000040Observation().
+                withClassCode('OBS').
+                withMoodCode(XActMoodDocumentObservation.EVN).
+                withTemplateId(ii('2.16.840.1.113883.10.20.1.31')).
+                withId(ii('c6f88322-67ad-11db-bd13-0800200c9a67')).
+                withCode(cd(vs.code, '2.16.840.1.113883.6.1').
+                    withDisplayName(vs.text)
+                ).
+                withStatusCode(cs('completed')).
+                withEffectiveTime(new IVLTS().
+                    withValue(currentTime.format(TimestampFormat))
+                ).
+                withValue(new PQ().
+                    withValue(vs.value).
+                    withUnit(vs.unit)
+                )
+            ),
+        new StrucDocTr().
+            withThOrTd(
+                new StrucDocTd().withContent(vs.text),
+                new StrucDocTd().withContent(currentTime.format('yyyy-MM-dd HH:mm z')),
+                new StrucDocTd().withContent(vs.value),
+                new StrucDocTd().withContent(vs.unit),
             )
-        )
+    )
+
   }
 
-  private POCDMT000040Component3 buildLabResults(List<Request.LabResult> vitalSigns) {
+  private POCDMT000040Component3 buildLabResults(List<Request.LabResult> labResults) {
+    def labResultElements = labResults.collect { buildLabResult(it) }
     def je = new StrucDocTable().
         withThead(new StrucDocThead().
             withTr(new StrucDocTr().
@@ -189,17 +191,7 @@ class CdaBuilder {
             )
         ).
         withTbody(new StrucDocTbody().
-            withTr(
-                vitalSigns.collect { vs ->
-                  new StrucDocTr().
-                      withThOrTd(
-                          new StrucDocTd().withContent(vs.text),
-                          new StrucDocTd().withContent(currentTime.format('yyyy-MM-dd HH:mm z')),
-                          new StrucDocTd().withContent(vs.value),
-                          new StrucDocTd().withContent(vs.unit),
-                      )
-                }
-            )
+            withTr(labResultElements*.right)
         )
 
     new POCDMT000040Component3().
@@ -221,34 +213,43 @@ class CdaBuilder {
                         withEffectiveTime(
                             new IVLTS().withValue(currentTime.format(TimestampFormat))
                         ).
-                        withComponent(vitalSigns.collect { vs -> buildLabResult(vs) })
+                        withComponent(labResultElements*.left)
 
                     )
                 )
         )
-
   }
 
 
-  private POCDMT000040Component4 buildLabResult(Request.LabResult labResult) {
-    new POCDMT000040Component4().
-        withObservation(new POCDMT000040Observation().
-            withClassCode('OBS').
-            withMoodCode(XActMoodDocumentObservation.EVN).
-            withTemplateId(ii('2.16.840.1.113883.10.20.1.31')).
-            withId(ii('c6f88322-67ad-11db-bd13-0800200c9a67')).
-            withCode(cd(labResult.code, '2.16.840.1.113883.6.1').
-                withDisplayName(labResult.text)
-            ).
-            withStatusCode(cs('completed')).
-            withEffectiveTime(new IVLTS().
-                withValue(currentTime.format(TimestampFormat))
-            ).
-            withValue(new PQ().
-                withValue(labResult.value).
-                withUnit(labResult.unit)
+  private Pair<POCDMT000040Component4, StrucDocTr> buildLabResult(Request.LabResult labResult) {
+    new Pair(
+        new POCDMT000040Component4().
+            withObservation(new POCDMT000040Observation().
+                withClassCode('OBS').
+                withMoodCode(XActMoodDocumentObservation.EVN).
+                withTemplateId(ii('2.16.840.1.113883.10.20.1.31')).
+                withId(ii('c6f88322-67ad-11db-bd13-0800200c9a67')).
+                withCode(cd(labResult.code, '2.16.840.1.113883.6.1').
+                    withDisplayName(labResult.text)
+                ).
+                withStatusCode(cs('completed')).
+                withEffectiveTime(new IVLTS().
+                    withValue(currentTime.format(TimestampFormat))
+                ).
+                withValue(new PQ().
+                    withValue(labResult.value).
+                    withUnit(labResult.unit)
+                )
+            ),
+        new StrucDocTr().
+            withThOrTd(
+                new StrucDocTd().withContent(labResult.text),
+                new StrucDocTd().withContent(currentTime.format('yyyy-MM-dd HH:mm z')),
+                new StrucDocTd().withContent(labResult.value),
+                new StrucDocTd().withContent(labResult.unit),
             )
-        )
-  }
 
+    )
+
+  }
 }
