@@ -1,11 +1,13 @@
 package com.github.rahulsom.docsource
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import groovy.transform.CompileStatic
 
 /**
  * Created by rahul on 12/8/14.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@CompileStatic
 class Request {
   class Patient {
     String firstName

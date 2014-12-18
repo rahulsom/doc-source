@@ -1,6 +1,5 @@
 package com.github.rahulsom.docsource.ihe
 
-import com.github.rahulsom.cda.POCDMT000040ClinicalDocument
 import com.github.rahulsom.docsource.MimeDataSource
 import com.github.rahulsom.docsource.Request
 import groovy.time.TimeCategory
@@ -59,7 +58,7 @@ class PnrBuilder {
   ProvideAndRegisterDocumentSetRequestType buildPnr(Request request, byte[] ccdOut){
 
     def photoRegex = 'data:(.*.);(.*),(.*)'
-    String photoFormat = null, photoEncoding = null, photoData = null
+    String photoFormat = null, photoEncoding = null, photoData = null, _ = null
     if (request.patient.photo ==~ photoRegex) {
       def photoMatch = request.patient.photo =~ photoRegex
       (_, photoFormat, photoEncoding, photoData) = photoMatch[0]
