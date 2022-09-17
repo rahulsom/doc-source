@@ -42,7 +42,7 @@ dependencies {
 		exclude module: "groovy-all"
 	}
 
-	compile 'com.github.rahulsom:ihe-iti:0.8'
+	compile 'com.github.rahulsom:ihe-iti:0.9'
 	compile 'com.github.rahulsom:genealogy:1.3'
 	compile 'com.github.rahulsom:geocoder:1.0'
 }
